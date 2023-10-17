@@ -3,9 +3,10 @@ from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from getpass import getpass
 from time import sleep
-import pyautogui
 import base64
 import os
+from pynput.keyboard import Controller
+
 
 file_ask2 = None
 if os.path.isfile("credentials"):
@@ -13,6 +14,8 @@ if os.path.isfile("credentials"):
     if file_ask == "y" or file_ask == "yes" or file_ask == "Y" or file_ask == "Yes":
         file = open("credentials", "rb")
         content = file.readlines()
+        file.close()
+
         un_b64 = content[0].decode("utf-8").strip()
         pw_b64 = content[1].decode("utf-8").strip()
         username = str(base64.b64decode(un_b64[2:-1]))[2:-1]
@@ -81,5 +84,7 @@ text_joined = ''.join([span.get_text() for span in spans])
 
 print(text_joined)
 
+keyboard = Controller()
 sleep(2)
-pyautogui.write(text_joined, interval=0)
+#pyautogui.write(text_joined, interval=0)
+keyboard.type(text_joined)
