@@ -88,15 +88,10 @@ print(text)
 
 keyboard = Controller()
 sleep(2)
-#pyautogui.write(text_joined, interval=0)
-#keyboard.type(text_joined)
 
 def type_text(text):
     for char in text:
         keyboard.type(char)
-
-# divide the text into equal parts for each thread
-#num_threads = 6 # Adjust the number of threads
 
 lock = threading.Lock()  # Create a lock
 
