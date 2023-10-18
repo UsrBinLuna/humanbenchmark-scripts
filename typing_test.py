@@ -89,10 +89,6 @@ print(text)
 keyboard = Controller()
 sleep(2)
 
-def type_text(text):
-    for char in text:
-        keyboard.type(char)
-
 lock = threading.Lock()  # Create a lock
 
 def type_text(text_chunk):
