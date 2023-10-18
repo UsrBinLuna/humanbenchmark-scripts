@@ -5,8 +5,10 @@ from getpass import getpass
 from time import sleep
 import base64
 import os
+import threading
 from pynput.keyboard import Controller
 
+num_threads = int(input("How many threads would you like to use? (int): "))
 
 file_ask2 = None
 if os.path.isfile("credentials"):
@@ -80,11 +82,41 @@ source = web.page_source
 # parse the html
 parsed_html = BeautifulSoup(source, 'html.parser')
 spans = parsed_html.find_all('span', class_='incomplete')
-text_joined: str = ''.join([span.get_text() for span in spans])
+text: str = ''.join([span.get_text() for span in spans])
 
-print(text_joined)
+print(text)
 
 keyboard = Controller()
 sleep(2)
 #pyautogui.write(text_joined, interval=0)
-keyboard.type(text_joined)
+#keyboard.type(text_joined)
+
+def type_text(text):
+    for char in text:
+        keyboard.type(char)
+
+# divide the text into equal parts for each thread
+#num_threads = 6 # Adjust the number of threads
+
+lock = threading.Lock()  # Create a lock
+
+def type_text(text_chunk):
+    with lock:  # Acquire the lock to type characters sequentially
+        for char in text_chunk:
+            keyboard.type(char)
+
+# Divide the text into equal parts for each thread
+chunk_size = len(text) // num_threads
+threads = []
+
+for i in range(num_threads):
+    start = i * chunk_size
+    end = start + chunk_size if i < num_threads - 1 else len(text)
+    text_chunk = text[start:end]
+
+    thread = threading.Thread(target=type_text, args=(text_chunk,))
+    threads.append(thread)
+    thread.start()
+
+for thread in threads:
+    thread.join()
