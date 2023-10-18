@@ -80,7 +80,7 @@ source = web.page_source
 # parse the html
 parsed_html = BeautifulSoup(source, 'html.parser')
 spans = parsed_html.find_all('span', class_='incomplete')
-text_joined = ''.join([span.get_text() for span in spans])
+text_joined: str = ''.join([span.get_text() for span in spans])
 
 print(text_joined)
 
